@@ -1,5 +1,6 @@
 import pandas as pd  # Used for dataframes
 import matplotlib.pyplot as plt  # Used for plotting
+from datetime import datetime
 
 
 def test_read_csv():
@@ -34,8 +35,27 @@ def plot_adj_close(df):
     """Plots the adj close value.
 
     """
-    df['Adj Close'].plot()
+    df[['High', 'Adj Close']].plot()
     plt.show()  # Must be called to show plot
+
+
+def date_range():
+    """Creates dataframe with dates as index.
+
+    """
+    # Define date range
+    start_date = '2017-09-15'
+    end_date = '2017-10-05'
+    dates = pd.date_range(start_date, end_date)
+    # Create an empty dataframe
+    df1 = pd.DataFrame(index=dates)
+
+    # Read SPY data into temporary dataframe
+    dfSPY = pd.read_csv('data/SPY.csv', index_col='Date', parse_dates=True)
+
+    # Join the two dataframes using DataFrame.join()
+    df1 = df1.join(dfSPY)
+    print(df1)
 
 
 if __name__ == "__main__":
@@ -46,5 +66,7 @@ if __name__ == "__main__":
     print(get_max_close(data_frame))
     print('Mean volume: ')
     print(get_mean_volume(data_frame))
-    """
     plot_adj_close(data_frame)
+    """
+    date_range()
+
