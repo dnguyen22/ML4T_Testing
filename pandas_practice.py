@@ -92,7 +92,26 @@ def date_range():
     #print(df[['AAPL', 'XOM']])  # A list of labels selects multiple columns
 
     # Slice by row and column
-    print(df.ix['2017-09-20':'2017-09-30', ['SPY', 'XOM']])
+    #print(df.ix['2017-09-20':'2017-09-30', ['SPY', 'XOM']])
+    return df
+
+
+def plot_data(df, title="Stock prices"):
+    """Plot stock prices"""
+    ax = df.plot(title=title, fontsize=8)
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Price")
+    plt.show()  # Must be called to show plots in some environments
+
+
+def plot_selected(df, columns, start_index, end_index):
+    """Plot the desired columns over index values in the given range"""
+    plot_data(df.ix[start_index:end_index, columns])
+
+
+def normalize_data(df):
+    """Normalize stock prices using the first row of the dataframe."""
+    return df/df.ix[0,:]
 
 
 if __name__ == "__main__":
@@ -106,5 +125,6 @@ if __name__ == "__main__":
     print(get_mean_volume(data_frame))
     plot_adj_close(data_frame)
     """
-    date_range()
+    df = date_range()
+    plot_data(normalize_data(df))
 
