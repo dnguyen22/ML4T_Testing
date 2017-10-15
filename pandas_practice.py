@@ -51,10 +51,28 @@ def date_range():
     df1 = pd.DataFrame(index=dates)
 
     # Read SPY data into temporary dataframe
-    dfSPY = pd.read_csv('data/SPY.csv', index_col='Date', parse_dates=True)
+    dfSPY = pd.read_csv('data/SPY.csv', index_col='Date',
+                        parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
 
-    # Join the two dataframes using DataFrame.join()
-    df1 = df1.join(dfSPY)
+    # Rename 'Adj Close' column with 'SPY' to prevent clash
+    dfSPY = dfSPY.rename(columns={'Adj Close':'SPY'})
+
+    # Join the two dataframes using DataFrame.join() with an inner join
+    df1 = df1.join(dfSPY, how='inner')
+
+    # Drop NaN values if an inner join was NOT used
+    # df1 = df1.dropna()
+
+    # Read in more stocks
+    symbols = ['AAPL', 'FB', 'GLD', 'GOOG', 'XOM']
+    for symbol in symbols:
+        df_temp=pd.read_csv('data/{}.csv'.format(symbol), index_col='Date',
+                            parse_dates=True, usecols=['Date', 'Adj Close'],
+                            na_values=['nan'])
+
+        # Rename to prevent clash
+        df_temp = df_temp.rename(columns={'Adj Close': symbol})
+        df1 = df1.join(df_temp)  # Use default how='left'
     print(df1)
 
 
