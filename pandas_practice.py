@@ -24,9 +24,8 @@ def get_data(symbols, dates):
         # Rename to prevent clash
         df_temp = df_temp.rename(columns={'Adj Close': symbol})
         df = df.join(df_temp)  # Use default how='left'
-
-    # Drop NaN values if an inner join was NOT used
-    df = df.dropna()
+        if symbol == 'SPY':  # Drop dates SPY did not trade
+            df = df.dropna(subset=["SPY"])
 
     return df
 
@@ -84,12 +83,22 @@ def date_range():
 
     # Get stock data
     df = get_data(symbols, dates)
-    print(df)
+
+    # Slice by row ranges (dates) using DataFrame.ix[] selector
+    #print(df.ix['2017-09-20':'2017-09-30'])
+
+    # Slice by column (symbols)
+    #print(df['GOOG'])  # A single label selects a single column
+    #print(df[['AAPL', 'XOM']])  # A list of labels selects multiple columns
+
+    # Slice by row and column
+    print(df.ix['2017-09-20':'2017-09-30', ['SPY', 'XOM']])
 
 
 if __name__ == "__main__":
-    data_frame = test_read_csv()
+
     """
+    data_frame = test_read_csv()
     slice_data()
     print('Max close: ')
     print(get_max_close(data_frame))
