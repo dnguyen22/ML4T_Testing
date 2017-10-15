@@ -1,6 +1,34 @@
 import pandas as pd  # Used for dataframes
 import matplotlib.pyplot as plt  # Used for plotting
-from datetime import datetime
+import os
+
+
+def symbol_to_path(symbol, base_dir="data"):
+    """Return CSV file path given ticker symbol."""
+    return os.path.join(base_dir, "{}.csv".format(str(symbol)))
+
+
+def get_data(symbols, dates):
+    """Read stock data (adjusted close for given symbols from CSV files."""
+    # Create an empty dataframe
+    df = pd.DataFrame(index=dates)
+    if 'SPY' not in symbols:  # Add SPY for reference, if absent
+        symbols.insert(0, 'SPY')
+
+    # Read and join data for each symbol
+    for symbol in symbols:
+        df_temp=pd.read_csv(symbol_to_path(symbol), index_col='Date',
+                            parse_dates=True, usecols=['Date', 'Adj Close'],
+                            na_values=['nan'])
+
+        # Rename to prevent clash
+        df_temp = df_temp.rename(columns={'Adj Close': symbol})
+        df = df.join(df_temp)  # Use default how='left'
+
+    # Drop NaN values if an inner join was NOT used
+    df = df.dropna()
+
+    return df
 
 
 def test_read_csv():
@@ -47,33 +75,16 @@ def date_range():
     start_date = '2017-09-15'
     end_date = '2017-10-05'
     dates = pd.date_range(start_date, end_date)
-    # Create an empty dataframe
-    df1 = pd.DataFrame(index=dates)
-
-    # Read SPY data into temporary dataframe
-    dfSPY = pd.read_csv('data/SPY.csv', index_col='Date',
-                        parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
-
-    # Rename 'Adj Close' column with 'SPY' to prevent clash
-    dfSPY = dfSPY.rename(columns={'Adj Close':'SPY'})
-
-    # Join the two dataframes using DataFrame.join() with an inner join
-    df1 = df1.join(dfSPY, how='inner')
 
     # Drop NaN values if an inner join was NOT used
     # df1 = df1.dropna()
 
     # Read in more stocks
     symbols = ['AAPL', 'FB', 'GLD', 'GOOG', 'XOM']
-    for symbol in symbols:
-        df_temp=pd.read_csv('data/{}.csv'.format(symbol), index_col='Date',
-                            parse_dates=True, usecols=['Date', 'Adj Close'],
-                            na_values=['nan'])
 
-        # Rename to prevent clash
-        df_temp = df_temp.rename(columns={'Adj Close': symbol})
-        df1 = df1.join(df_temp)  # Use default how='left'
-    print(df1)
+    # Get stock data
+    df = get_data(symbols, dates)
+    print(df)
 
 
 if __name__ == "__main__":
