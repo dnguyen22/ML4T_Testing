@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt  # Used for plotting
 import os  # Used to get current working directory
 
 
-def plot_data(df, title="Stock prices"):
+def plot_data(df, title="Stock prices", xlabel="Date", ylabel="Price"):
     """Plot stock prices"""
     ax = df.plot(title=title, fontsize=8)
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Price")
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     plt.show()  # Must be called to show plots in some environments
 
 
@@ -95,6 +95,16 @@ def get_bollinger_bands(rm, rstd):
     return upper_band, lower_band
 
 
+def compute_daily_returns(df):
+    """Compute and return the daily return values."""
+    daily_ret = df.copy()  # Copy given data frame to match size and column names
+    # Compute daily returns for row 1 onwards
+    #daily_ret[1:] = (df[1:] / df[:-1].values) - 1  # Alternative method using numpy
+    daily_ret = (df / df.shift(1)) - 1
+    daily_ret.ix[0, :] = 0  # Set daily returns for row 0 to 0
+    return daily_ret
+
+
 if __name__ == "__main__":
     # Define date range
     start_date = '2017-09-15'
@@ -109,4 +119,8 @@ if __name__ == "__main__":
     # Compute global statistics for each stock
     #print_global_stats(df)
 
-    rolling_mean_demo(df)
+    #rolling_mean_demo(df)
+
+    # Compute daily returns
+    daily_returns = compute_daily_returns(df)
+    plot_data(daily_returns, title="Daily returns", ylabel="Daily returns")
