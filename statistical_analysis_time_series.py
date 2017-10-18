@@ -105,6 +105,12 @@ def compute_daily_returns(df):
     return daily_ret
 
 
+def fill_missing_values(df_data):
+    """Fill missing values in data frame, in place."""
+    df_data.fillna(method='ffill', inplace=True)  # Forward fill NaN values with last valid value
+    df_data.fillna(method='bfill', inplace=True)  # Back fill NaN values with newest valid value
+
+
 if __name__ == "__main__":
     # Define date range
     start_date = '2017-09-15'
@@ -113,7 +119,10 @@ if __name__ == "__main__":
     dates = pd.date_range(start_date, end_date)
     symbols = ['SPY', 'AAPL', 'FB', 'GLD', 'GOOG', 'XOM']
     df = get_data(symbols, dates)
-    df.fillna(method='ffill')  # Forward fill NaN values with last valid value
+
+    # Fill missing values
+    fill_missing_values(df)
+
     # Plot
     plot_data(normalize_data(df))
 
