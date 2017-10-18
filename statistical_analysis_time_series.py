@@ -50,21 +50,49 @@ def print_global_stats(df):
 
 
 def rolling_mean_demo(df):
-    # Plot SPY data, retain matplotlib axis object
-    ax = df['SPY'].plot(title="SPY rolling mean", label='SPY')
-
     # Compute rolling mean using a 3-day window
     #rm_SPY = pd.rolling_mean(df['SPY'], window=20)  # Old method
-    rm_SPY = df['SPY'].rolling(window=3, center=False).mean()
+    #rm_SPY = df['SPY'].rolling(window=3, center=False).mean()
 
+    # Compute Bollinger Bands
+    # 1. Compute rolling mean
+    rm_SPY = get_rolling_mean(df['SPY'], window=3)
+
+    # 2. Compute rolling standard deviation
+    rstd_SPY = get_rolling_std(df['SPY'], window=3)
+
+    # 3. Compute upper and lower bands
+    upper_band, lower_band = get_bollinger_bands(rm_SPY, rstd_SPY)
+
+    # Plot raw SPY data, rolling mean and Bollinger Bands
+    ax = df['SPY'].plot(title="Bollinger Bands", label='SPY')
     # Add rolling mean to same plot
     rm_SPY.plot(label='Rolling mean', ax=ax)
+    upper_band.plot(label='upper band', ax=ax)
+    lower_band.plot(label='lower band', ax=ax)
 
     # Add axis labels and legend
     ax.set_xlabel("Date")
     ax.set_ylabel("Price")
     ax.legend(loc='upper left')
     plt.show()
+
+
+def get_rolling_mean(values, window):
+    """Return rolling mean of given values, using specified window"""
+    return values.rolling(window=window, center=False).mean()
+
+
+def get_rolling_std(values, window):
+    """Return rolling standard deviation of given values, using specified window"""
+    return values.rolling(window=window, center=False).std()
+
+
+def get_bollinger_bands(rm, rstd):
+    """Return upper and lower Bollinger Bands."""
+    upper_band = rm + rstd
+    lower_band = rm - rstd
+    return upper_band, lower_band
 
 
 if __name__ == "__main__":
