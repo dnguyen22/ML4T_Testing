@@ -89,9 +89,9 @@ def get_rolling_std(values, window):
 
 
 def get_bollinger_bands(rm, rstd):
-    """Return upper and lower Bollinger Bands."""
-    upper_band = rm + rstd
-    lower_band = rm - rstd
+    """Return upper and lower Bollinger Bands. Mean +/- 2 standard deviations"""
+    upper_band = rm + rstd * 2
+    lower_band = rm - rstd * 2
     return upper_band, lower_band
 
 
