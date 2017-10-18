@@ -32,3 +32,7 @@ if __name__ == "__main__":
     print("Mean=", mean)
     std = daily_rets.std()
     print("st.dev=",std)
+    # Calculate Sharpe ratio
+    daily_rf = ((1.0+0.1) ** (1.0/252.0)) - 1  #  Daily risk-free rate can be approx. by 0
+    sharpe = (daily_rets - daily_rf).mean()/(daily_rets - daily_rf).std()
+    print("Sharpe ratio=", sharpe)
