@@ -113,11 +113,11 @@ def fill_missing_values(df_data):
 
 if __name__ == "__main__":
     # Define date range
-    start_date = '2017-09-15'
+    start_date = '2015-09-15'
     end_date = '2017-10-05'
     # Read data
     dates = pd.date_range(start_date, end_date)
-    symbols = ['SPY', 'AAPL', 'FB', 'GLD', 'GOOG', 'XOM']
+    symbols = ['SPY', 'ALRM', 'GOOG', 'XOM']
     df = get_data(symbols, dates)
 
     # Fill missing values
