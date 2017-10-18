@@ -49,6 +49,24 @@ def print_global_stats(df):
     print(df.std())
 
 
+def rolling_mean_demo(df):
+    # Plot SPY data, retain matplotlib axis object
+    ax = df['SPY'].plot(title="SPY rolling mean", label='SPY')
+
+    # Compute rolling mean using a 3-day window
+    #rm_SPY = pd.rolling_mean(df['SPY'], window=20)  # Old method
+    rm_SPY = df['SPY'].rolling(window=3, center=False).mean()
+
+    # Add rolling mean to same plot
+    rm_SPY.plot(label='Rolling mean', ax=ax)
+
+    # Add axis labels and legend
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Price")
+    ax.legend(loc='upper left')
+    plt.show()
+
+
 if __name__ == "__main__":
     # Define date range
     start_date = '2017-09-15'
@@ -61,4 +79,6 @@ if __name__ == "__main__":
     plot_data(normalize_data(df))
 
     # Compute global statistics for each stock
-    print_global_stats(df)
+    #print_global_stats(df)
+
+    rolling_mean_demo(df)
