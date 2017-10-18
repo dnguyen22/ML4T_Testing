@@ -43,6 +43,12 @@ def normalize_data(df):
     return df/df.ix[0,:]
 
 
+def print_global_stats(df):
+    print(df.mean())
+    print(df.median())
+    print(df.std())
+
+
 if __name__ == "__main__":
     # Define date range
     start_date = '2017-09-15'
@@ -53,3 +59,6 @@ if __name__ == "__main__":
     df = get_data(symbols, dates)
     # Plot
     plot_data(normalize_data(df))
+
+    # Compute global statistics for each stock
+    print_global_stats(df)
