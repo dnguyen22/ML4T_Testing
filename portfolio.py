@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from util import get_data, plot_data, compute_daily_returns, normalize_data
+from util import get_data, plot_data, normalize_data
 
 
 if __name__ == "__main__":
@@ -20,4 +20,15 @@ if __name__ == "__main__":
     normed = normalize_data(df)
     alloced = normed*allocs
     pos_vals = alloced*start_val
-    port_val = pos_vals.sum(axis=1)
+    port_val = pos_vals.sum(axis=1)  # Portfolio values
+
+    daily_rets = (port_val / port_val.shift(1)) - 1  # Normalize (compute daily returns)
+    daily_rets = daily_rets.ix[1:]  # First row value is 0, so get rid of it
+
+    # Compute statistics
+    cumulative = (port_val[-1]/port_val[0]) - 1
+    print("cumulative=", cumulative)
+    mean = daily_rets.mean()
+    print("Mean=", mean)
+    std = daily_rets.std()
+    print("st.dev=",std)
