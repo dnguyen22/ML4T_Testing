@@ -56,10 +56,10 @@ def rolling_mean_demo(df):
 
     # Compute Bollinger Bands
     # 1. Compute rolling mean
-    rm_SPY = get_rolling_mean(df['SPY'], window=3)
+    rm_SPY = get_rolling_mean(df['SPY'], window=20)
 
     # 2. Compute rolling standard deviation
-    rstd_SPY = get_rolling_std(df['SPY'], window=3)
+    rstd_SPY = get_rolling_std(df['SPY'], window=20)
 
     # 3. Compute upper and lower bands
     upper_band, lower_band = get_bollinger_bands(rm_SPY, rstd_SPY)
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # Compute global statistics for each stock
     #print_global_stats(df)
 
-    #rolling_mean_demo(df)
+    rolling_mean_demo(df)
 
     # Compute daily returns
     daily_returns = compute_daily_returns(df)
