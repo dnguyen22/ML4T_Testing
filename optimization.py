@@ -1,7 +1,7 @@
 """Minimize an objective function, using  SciPy"""
 
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.optimize as spo
 
@@ -18,3 +18,10 @@ if __name__ == "__main__":
     min_result = spo.minimize(f, Xguess, method="SLSQP", options={'disp': True})
     print("Minima found at:")
     print("X = {}, Y = {}".format(min_result.x, min_result.fun))
+    
+    # Plot function values, mark minima
+    Xplot = np.linspace(0.5, 2.5, 21)
+    Yplot = f(Xplot)
+    plt.plot(Xplot, Yplot)
+    plt.title("Minima of an objective function")
+    plt.show()
