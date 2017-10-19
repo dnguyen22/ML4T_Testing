@@ -1,7 +1,6 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from util import get_data, plot_data, normalize_data
+import math
+from util import get_data, normalize_data
 
 
 if __name__ == "__main__":
@@ -27,12 +26,14 @@ if __name__ == "__main__":
 
     # Compute statistics
     cumulative = (port_val[-1]/port_val[0]) - 1
-    print("cumulative=", cumulative)
+    print("Cumulative Return=", cumulative)
     mean = daily_rets.mean()
-    print("Mean=", mean)
+    print("Average Daily Return (Mean)=", mean)
     std = daily_rets.std()
-    print("st.dev=",std)
+    print("Risk (St.Dev)=",std)
     # Calculate Sharpe ratio
     daily_rf = ((1.0+0.1) ** (1.0/252.0)) - 1  #  Daily risk-free rate can be approx. by 0
     sharpe = (daily_rets - daily_rf).mean()/(daily_rets - daily_rf).std()
-    print("Sharpe ratio=", sharpe)
+    k = math.sqrt(252)  # Sharpe correction factor for non-annual values. Equals sqrt of samples per year
+    sharpe_annualized = sharpe * k
+    print("Sharpe Ratio=", sharpe_annualized)
